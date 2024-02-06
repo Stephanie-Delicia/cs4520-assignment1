@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragments.LoginFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -12,43 +13,42 @@
         android:id="@+id/LoginButton"
         android:layout_width="120dp"
         android:layout_height="50dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="40dp"
         android:backgroundTint="@android:color/holo_orange_dark"
         android:text="Login"
-        app:layout_constraintEnd_toEndOf="@+id/editTextUsername"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/editTextUsername"
-        app:layout_constraintTop_toBottomOf="@+id/editTextUsername"
+        app:layout_constraintEnd_toEndOf="@+id/editTextPassword"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="@+id/editTextPassword"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword"
         tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/editTextUsername"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:autofillHints="username"
-        android:ems="10"
         android:hint="Please enter a username."
         android:inputType="text"
         android:text="Username"
-        app:layout_constraintEnd_toEndOf="@+id/editTextPassword"
-        app:layout_constraintStart_toStartOf="@+id/editTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4"
+        tools:ignore="HardcodedText,MissingConstraints" />
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:autofillHints="password"
-        android:ems="10"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:text="Password"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.500"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.400"
-        tools:ignore="LabelFor,MissingConstraints" />
+        app:layout_constraintEnd_toEndOf="@+id/editTextUsername"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editTextUsername"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUsername"
+        app:layout_constraintVertical_bias="0"
+        tools:ignore="HardcodedText,LabelFor,MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
