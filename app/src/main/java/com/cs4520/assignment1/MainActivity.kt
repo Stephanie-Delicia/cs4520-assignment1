@@ -1,6 +1,7 @@
 package com.cs4520.assignment1
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +28,7 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
-        setContentView(R.layout.activity_layout);
+        setContentView(R.layout.activity_layout)
     }
 }
 

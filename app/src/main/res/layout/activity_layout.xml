@@ -8,14 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView"
-        tools:ignore="HardcodedText" />
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/loginFragment"
         android:name="com.cs4520.assignment1.fragments.LoginFragment"
