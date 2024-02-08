@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.cs4520.assignment1.R
 import org.w3c.dom.Text
@@ -32,27 +33,7 @@ class LoginFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_login, container, false);
-        //val loginButton = view.findViewById<Button>(R.id.LoginButton);
-        //if (savedInstanceState != null) {
-         //   userText = savedInstanceState.getString("userText").toString()
-         //   passText = savedInstanceState.getString("passText").toString()
-       // }
 
-        //val userTextView = view.findViewById<TextView>(R.id.editTextUsername)
-        //val passTextView = view.findViewById<TextView>(R.id.editTextPassword)
-
-        //userTextView.setText(userText)
-        //passTextView.setText(passText)
-
-        /*if (userText == "admin" && passText == "admin") {
-            loginButton.setOnClickListener {
-                Toast.makeText(requireActivity(), "YEEHAW", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            loginButton.setOnClickListener {
-                Toast.makeText(requireActivity(), userText, Toast.LENGTH_SHORT).show()
-            }
-        }*/
         var loginBtn = view.findViewById<Button>(R.id.LoginButton)
         var userTextView = view.findViewById<EditText>(R.id.editTextUsername)
         var passTextView = view.findViewById<EditText>(R.id.editTextPassword)
@@ -61,6 +42,9 @@ class LoginFragment : Fragment() {
         loginBtn.setOnClickListener(View.OnClickListener {
             if (userTextView.text.toString().equals("admin") and passTextView.text.toString().equals("admin")) {
                 Toast.makeText(requireActivity(), "YEEHAW", Toast.LENGTH_SHORT).show()
+                var fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.loginFragment, ProductListFragment())
+                fragmentTransaction.commit()
             } else {
                 Toast.makeText(requireActivity(), "Please enter valid username and password. Hint: admin", Toast.LENGTH_SHORT).show()
             }

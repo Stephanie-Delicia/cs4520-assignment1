@@ -16,4 +16,12 @@
         android:visibility="visible"
         tools:layout="@layout/fragment_login" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/productListFragment"
+        android:name="com.cs4520.assignment1.fragments.ProductListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        tools:layout="@layout/fragment_product_list" />
+
 </LinearLayout>
