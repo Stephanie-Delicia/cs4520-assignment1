@@ -18,38 +18,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.cs4520.assignment1.ui.theme.Assignment1Theme
 
 class MainActivity : FragmentActivity() {
+
+    private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            Assignment1Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
+
         setContentView(R.layout.activity_layout)
+
+        //val navHostFragment = supportFragmentManager.findFragmentById(R.id.navFragment)
+        //       as NavHostFragment
+
+        //navController = navHostFragment.navController
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Assignment1Theme {
-        Greeting("Android")
+    override fun onNavigateUp(): Boolean {
+        navController = findNavController(R.id.navFragment)
+        return navController.navigateUp() || super.onNavigateUp()
     }
 }
