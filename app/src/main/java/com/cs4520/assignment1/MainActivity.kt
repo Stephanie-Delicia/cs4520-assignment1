@@ -37,8 +37,8 @@ class MainActivity : FragmentActivity() {
         //navController = navHostFragment.navController
     }
 
-    override fun onNavigateUp(): Boolean {
-        navController = findNavController(R.id.navFragment)
-        return navController.navigateUp() || super.onNavigateUp()
-    }
+    //override fun onNavigateUp(): Boolean {
+     //   navController = findNavController(R.id.navFragment)
+      //  return navController.navigateUp() || super.onNavigateUp()
+  //  }
 }
