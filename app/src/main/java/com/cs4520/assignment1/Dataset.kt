@@ -90,5 +90,4 @@ sealed class Product : IProduct { // abstract class
 
 fun main() {
     println(foodDataset.map{it.price}.toString())
-
 }

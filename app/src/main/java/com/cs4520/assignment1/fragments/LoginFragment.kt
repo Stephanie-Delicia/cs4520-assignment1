@@ -37,18 +37,16 @@ class LoginFragment : Fragment() {
 
         loginBtn.setOnClickListener{
             if (userTextView.text.toString().equals("admin") and passTextView.text.toString().equals("admin")) {
-                Log.i("Location:", navHostFragmentController?.currentDestination.toString())
-                Toast.makeText(requireActivity(), "YEEHAW.", Toast.LENGTH_SHORT).show()
-                //findNavController().navigate(R.id.action_loginFragment_to_productListFragment)
-                //view.findNavController().navigate(R.id.action_loginFragment_to_productListFragment)
-                //var fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-                //fragmentTransaction.replace(R.id.loginFragment, ProductListFragment())
-                //fragmentTransaction.commit()
+                // Log.i("Location:", navHostFragmentController?.currentDestination.toString())
+               /Toast.makeText(requireActivity(), "Successful login.", Toast.LENGTH_SHORT).show()
+
                 if (navHostFragmentController != null) {
-                        navHostFragmentController.navigate(R.id.action_loginFragment_to_productListFragment)
-                    }
+                    navHostFragmentController.navigate(R.id.action_loginFragment_to_productListFragment)
+                    userTextView.setText("")
+                    passTextView.setText("")
+                }
             } else {
-                Toast.makeText(requireActivity(), "Please enter valid username and password. Hint: admin", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), "Invalid username/password. Hint: admin", Toast.LENGTH_SHORT).show()
             }
         }
 
