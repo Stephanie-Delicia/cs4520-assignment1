@@ -1,6 +1,6 @@
 package com.cs4520.assignment1
 
-val productsDataset = listOf(
+public val productsDataset = listOf(
     listOf("Treadmill", "Equipment", null, 32),
     listOf("Banana", "Food", "2024-02-29", 29),
     listOf("Dumbbells", "Equipment", null, 45),
@@ -38,3 +38,57 @@ val productsDataset = listOf(
     listOf("Gymnastic Rings", "Equipment", null, 50),
     listOf("Blackberry", "Food", "2024-05-08", 29),
 )
+
+public val foodDataset: List<Product.FoodProduct>
+= productsDataset.filter{it[1] == "Food"}.toSet().map{
+    Product.FoodProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.FOOD)}
+
+public val equipmentProductDataset : List<Product.EquipmentProduct>
+= productsDataset.filter{it[1] == "Equipment"}.toSet().map{
+    Product.EquipmentProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.EQUIPMENT)}
+enum class ProductType {
+    EQUIPMENT, FOOD
+}
+interface IProduct {            // Interface for a ticket
+    abstract val name: String // all tickets should have a price
+    abstract val expiryDate: String? // optional
+    abstract val price: Int
+    abstract val type: ProductType
+    fun backgroundColor() : String
+    fun imageForDisplay() : Int
+}
+sealed class Product : IProduct { // abstract class
+    class FoodProduct(
+        override val name: String,
+        override val expiryDate: String?,
+        override val price: Int,
+        override val type: ProductType
+    ) : Product() {
+
+        override fun backgroundColor(): String {
+            return "#FFD965"
+        }
+        override fun imageForDisplay(): Int {
+            return R.drawable.food
+        }
+    }
+
+    class EquipmentProduct(
+        override val name: String,
+        override val expiryDate: String?,
+        override val price: Int,
+        override val type: ProductType
+    ) : Product() {
+        override fun backgroundColor(): String {
+            return "#E06666"
+        }
+        override fun imageForDisplay(): Int {
+            return R.drawable.equipment
+        }
+    }
+}
+
+fun main() {
+    println(foodDataset.map{it.price}.toString())
+
+}
