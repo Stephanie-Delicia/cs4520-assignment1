@@ -5,12 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     val foodList: List<Product.FoodProduct> = foodDataset
     val equpimentList: List<Product.EquipmentProduct> = equipmentProductDataset
-    val productList: List<Product> = foodList + equpimentList
+    val productList: List<Product> = entireDatasetConverted
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.card_layout, parent, false)
         return ViewHolder(v)
@@ -20,6 +22,7 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
         holder.itemTitle.text = productList[position].name
         holder.itemDetail.text = productList[position].price.toString()
         holder.itemImage.setImageResource(productList[position].imageForDisplay())
+        holder.itemBackground.setCardBackgroundColor(Color.parseColor(productList[position].backgroundColor()))
     }
     override fun getItemCount(): Int {
         return productList.size
@@ -28,10 +31,12 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
         var itemImage: ImageView
         var itemTitle: TextView
         var itemDetail: TextView
+        var itemBackground: CardView
         init {
             itemImage = itemView.findViewById(R.id.item_image)
             itemTitle = itemView.findViewById(R.id.item_title)
             itemDetail = itemView.findViewById(R.id.item_detail)
+            itemBackground = itemView.findViewById(R.id.card_view)
         }
     }
 

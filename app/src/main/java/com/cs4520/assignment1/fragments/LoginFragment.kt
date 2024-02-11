@@ -38,7 +38,7 @@ class LoginFragment : Fragment() {
         loginBtn.setOnClickListener{
             if (userTextView.text.toString().equals("admin") and passTextView.text.toString().equals("admin")) {
                 // Log.i("Location:", navHostFragmentController?.currentDestination.toString())
-               /Toast.makeText(requireActivity(), "Successful login.", Toast.LENGTH_SHORT).show()
+               Toast.makeText(requireActivity(), "Successful login.", Toast.LENGTH_SHORT).show()
 
                 if (navHostFragmentController != null) {
                     navHostFragmentController.navigate(R.id.action_loginFragment_to_productListFragment)

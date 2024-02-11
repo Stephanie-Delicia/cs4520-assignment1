@@ -39,6 +39,12 @@ public val productsDataset = listOf(
     listOf("Blackberry", "Food", "2024-05-08", 29),
 )
 
+public val entireDatasetConverted : List<Product> = productsDataset.map{ if (it[1] == "Food") {
+    Product.FoodProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.FOOD)
+} else {
+    Product.EquipmentProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.EQUIPMENT)
+} }
+
 public val foodDataset: List<Product.FoodProduct>
 = productsDataset.filter{it[1] == "Food"}.toSet().map{
     Product.FoodProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.FOOD)}
