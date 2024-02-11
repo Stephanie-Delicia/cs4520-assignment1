@@ -62,6 +62,7 @@ interface IProduct {            // Interface for a ticket
     abstract val type: ProductType
     fun backgroundColor() : String
     fun imageForDisplay() : Int
+    fun printInfo() : String
 }
 sealed class Product : IProduct { // abstract class
     class FoodProduct(
@@ -77,6 +78,15 @@ sealed class Product : IProduct { // abstract class
         override fun imageForDisplay(): Int {
             return R.drawable.food
         }
+
+        override fun printInfo(): String {
+            var info = ""
+            if (expiryDate != null) {
+                info = "Exp. date: " + expiryDate + "\n"
+            }
+            info = info + "$" + price.toString()
+            return info
+        }
     }
 
     class EquipmentProduct(
@@ -90,6 +100,15 @@ sealed class Product : IProduct { // abstract class
         }
         override fun imageForDisplay(): Int {
             return R.drawable.equipment
+        }
+
+        override fun printInfo(): String {
+            var info = ""
+            if (expiryDate != null) {
+                info = "Exp. date: " + expiryDate + "\n"
+            }
+            info = info + "$" + price.toString()
+            return info
         }
     }
 }

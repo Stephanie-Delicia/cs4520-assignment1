@@ -10,8 +10,6 @@ import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-    val foodList: List<Product.FoodProduct> = foodDataset
-    val equpimentList: List<Product.EquipmentProduct> = equipmentProductDataset
     val productList: List<Product> = entireDatasetConverted
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.card_layout, parent, false)
@@ -20,7 +18,7 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
         holder.itemTitle.text = productList[position].name
-        holder.itemDetail.text = productList[position].price.toString()
+        holder.itemDetail.text = productList[position].printInfo()
         holder.itemImage.setImageResource(productList[position].imageForDisplay())
         holder.itemBackground.setCardBackgroundColor(Color.parseColor(productList[position].backgroundColor()))
     }
