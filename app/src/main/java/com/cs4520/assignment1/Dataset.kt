@@ -78,7 +78,6 @@ sealed class Product : IProduct { // abstract class
         override fun imageForDisplay(): Int {
             return R.drawable.food
         }
-
         override fun printInfo(): String {
             var info = ""
             if (expiryDate != null) {

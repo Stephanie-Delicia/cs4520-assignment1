@@ -20,6 +20,8 @@
             android:id="@+id/item_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -33,13 +35,23 @@
             android:textSize="30sp"/>
 
         <TextView
-            android:id="@+id/item_detail"
+            android:id="@+id/item_expiration"
             android:layout_width="236dp"
-            android:layout_height="40dp"
+            android:layout_height="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@id/item_title"
+            app:layout_constraintLeft_toRightOf="@id/item_image"/>
+
+        <TextView
+            android:id="@+id/item_price"
+            android:layout_width="236dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/item_expiration"
             app:layout_constraintLeft_toRightOf="@id/item_image"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
