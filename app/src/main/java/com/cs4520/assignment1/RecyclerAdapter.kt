@@ -24,6 +24,7 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
             holder.itemPrice.isInvisible = true
             holder.itemExpiration.text = "$" + productList[position].price.toString()
         } else {
+            holder.itemPrice.isInvisible = false
             holder.itemExpiration.text = productList[position].expiryDate
             holder.itemPrice.text = "$" + productList[position].price.toString()
         }
