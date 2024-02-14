@@ -4,7 +4,7 @@ Link to GitHub repository: https://github.com/Stephanie-Delicia/cs4520-assignmen
 
 ### To use:
 
-I was able to run the app on my end and included a video of how the app functions. 
+I was able to run the app on my end and included a video (assignment1_demo.mov) of how the app functions. 
 So, I believe downloading the code and running it should work with Android 14.
 
 The LoginFragment, ProductListFragment, and navigation should function as per assignment requirements. 
