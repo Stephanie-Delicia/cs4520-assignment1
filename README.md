@@ -23,6 +23,8 @@ LoginFragment has two text fields and a button. ProductListFragment just display
 
 An adapter for displaying products in a list in the ProductListFragment. Obtains data from Dataset.kt from the original repo.
 
+Dataset.kt contains the seal classes for different product types.
+
 #### 4. Layout
 
 This folder contains the layouts for the new fragments, main activity, and the card layout for the product list.
