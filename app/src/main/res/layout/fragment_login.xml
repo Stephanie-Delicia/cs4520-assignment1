@@ -12,7 +12,7 @@
         android:layout_width="120dp"
         android:layout_height="50dp"
         android:layout_marginTop="40dp"
-        android:backgroundTint="@android:color/holo_orange_dark"
+        android:backgroundTint="#C73900"
         android:text="Login"
         app:layout_constraintEnd_toEndOf="@+id/editTextPassword"
         app:layout_constraintHorizontal_bias="0.488"
@@ -33,13 +33,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.4"
-        tools:ignore="HardcodedText,MissingConstraints" />
+        tools:ignore="HardcodedText,MissingConstraints"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:hint="Password"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,6 +49,7 @@
         app:layout_constraintStart_toStartOf="@+id/editTextUsername"
         app:layout_constraintTop_toBottomOf="@+id/editTextUsername"
         app:layout_constraintVertical_bias="0"
-        tools:ignore="HardcodedText,LabelFor,MissingConstraints" />
+        tools:ignore="HardcodedText,LabelFor,MissingConstraints"
+        android:autofillHints="" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

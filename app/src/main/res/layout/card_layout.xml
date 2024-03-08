@@ -23,7 +23,8 @@
             android:scaleType="fitXY"
             android:adjustViewBounds="true"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:contentDescription="@string/card" />
 
         <TextView
             android:id="@+id/item_title"

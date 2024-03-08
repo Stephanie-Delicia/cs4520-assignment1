@@ -11,7 +11,7 @@ import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-    val productList: List<Product> = entireDatasetConverted
+    private val productList: List<Product> = entireDatasetConverted
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.card_layout, parent, false)
         return ViewHolder(v)
@@ -22,11 +22,15 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
         val expiry = productList[position].expiryDate
         if (expiry.isNullOrEmpty()) { // if no expiration date is given, make component invisible
             holder.itemPrice.isInvisible = true
-            holder.itemExpiration.text = "$" + productList[position].price.toString()
+            val price = holder.itemView.context.getString(R.string.dollar) +
+                    productList[position].price.toString()
+            holder.itemExpiration.text = price
         } else {
             holder.itemPrice.isInvisible = false
             holder.itemExpiration.text = productList[position].expiryDate
-            holder.itemPrice.text = "$" + productList[position].price.toString()
+            val price = holder.itemView.context.getString(R.string.dollar) +
+                    productList[position].price.toString()
+            holder.itemPrice.text = price
         }
         holder.itemImage.setImageResource(productList[position].imageForDisplay())
         holder.itemBackground.setCardBackgroundColor(Color.parseColor(productList[position].backgroundColor()))

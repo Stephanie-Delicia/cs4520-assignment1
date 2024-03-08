@@ -1,6 +1,6 @@
 package com.cs4520.assignment1
 
-public val productsDataset = listOf(
+val productsDataset = listOf(
     listOf("Treadmill", "Equipment", null, 32),
     listOf("Banana", "Food", "2024-02-29", 29),
     listOf("Dumbbells", "Equipment", null, 45),
@@ -39,27 +39,24 @@ public val productsDataset = listOf(
     listOf("Blackberry", "Food", "2024-05-08", 29),
 )
 
-public val entireDatasetConverted : List<Product> = productsDataset.map{ if (it[1] == "Food") {
+val entireDatasetConverted : List<Product> = productsDataset.map{ if (it[1] == "Food") {
     Product.FoodProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.FOOD)
 } else {
     Product.EquipmentProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.EQUIPMENT)
 } }
 
-public val foodDataset: List<Product.FoodProduct>
+val foodDataset: List<Product.FoodProduct>
 = productsDataset.filter{it[1] == "Food"}.toSet().map{
     Product.FoodProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.FOOD)}
 
-public val equipmentProductDataset : List<Product.EquipmentProduct>
-= productsDataset.filter{it[1] == "Equipment"}.toSet().map{
-    Product.EquipmentProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.EQUIPMENT)}
 enum class ProductType {
     EQUIPMENT, FOOD
 }
 interface IProduct {            // Interface for a ticket
-    abstract val name: String // all tickets should have a price
-    abstract val expiryDate: String? // optional
-    abstract val price: Int
-    abstract val type: ProductType
+    val name: String // all tickets should have a price
+    val expiryDate: String? // optional
+    val price: Int
+    val type: ProductType
     fun backgroundColor() : String
     fun imageForDisplay() : Int
     fun printInfo() : String
@@ -81,9 +78,9 @@ sealed class Product : IProduct { // abstract class
         override fun printInfo(): String {
             var info = ""
             if (expiryDate != null) {
-                info = "Exp. date: " + expiryDate + "\n"
+                info = "Exp. date: $expiryDate\n"
             }
-            info = info + "$" + price.toString()
+            info = "$info$$price"
             return info
         }
     }
@@ -104,9 +101,9 @@ sealed class Product : IProduct { // abstract class
         override fun printInfo(): String {
             var info = ""
             if (expiryDate != null) {
-                info = "Exp. date: " + expiryDate + "\n"
+                info = "Exp. date: $expiryDate\n"
             }
-            info = info + "$" + price.toString()
+            info = "$info$$price"
             return info
         }
     }

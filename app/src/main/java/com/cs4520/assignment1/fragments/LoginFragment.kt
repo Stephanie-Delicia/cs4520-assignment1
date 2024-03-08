@@ -8,43 +8,48 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
-import androidx.navigation.Navigation
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cs4520.assignment1.R
-import org.w3c.dom.Text
+import com.cs4520.assignment1.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
+
+    private lateinit var loginBtn : Button
+    private lateinit var userTextView : EditText
+    private lateinit var passTextView : EditText
+    private lateinit var navHostFragmentController : NavController
+
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_login, container, false);
+                              savedInstanceState: Bundle?): View {
 
-        val navHostFragmentController =
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        val view = binding.root
+        // Inflate the layout for this fragment
+        // val view = inflater.inflate(R.layout.fragment_login, container, false)
+
+        navHostFragmentController =
             requireActivity().supportFragmentManager.findFragmentById(R.id.navFragment)
-                ?.findNavController()
-        var loginBtn = view.findViewById<Button>(R.id.LoginButton)
-        var userTextView = view.findViewById<EditText>(R.id.editTextUsername)
-        var passTextView = view.findViewById<EditText>(R.id.editTextPassword)
+                ?.findNavController()!!
+        loginBtn = binding.LoginButton
+        userTextView = binding.editTextUsername
+        passTextView = binding.editTextPassword
 
         loginBtn.setOnClickListener{
-            if (userTextView.text.toString().equals("admin") and passTextView.text.toString().equals("admin")) {
-                // Log.i("Location:", navHostFragmentController?.currentDestination.toString())
+            if ((userTextView.text.toString() == "admin") and (passTextView.text.toString() == "admin")) {
                Toast.makeText(requireActivity(), "Successful login.", Toast.LENGTH_SHORT).show()
 
-                if (navHostFragmentController != null) {
-                    navHostFragmentController.navigate(R.id.action_loginFragment_to_productListFragment)
-                    userTextView.setText("")
-                    passTextView.setText("")
-                }
+                navHostFragmentController.navigate(R.id.action_loginFragment_to_productListFragment)
+                userTextView.setText("")
+                passTextView.setText("")
             } else {
                 Toast.makeText(requireActivity(), "Invalid username/password. Hint: admin", Toast.LENGTH_SHORT).show()
             }
