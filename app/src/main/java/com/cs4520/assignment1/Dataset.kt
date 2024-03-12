@@ -1,5 +1,11 @@
 package com.cs4520.assignment1
 
+import android.util.Log
+import com.cs4520.assignment1.RetrofitClient.retrofit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 val productsDataset = listOf(
     listOf("Treadmill", "Equipment", null, 32),
     listOf("Banana", "Food", "2024-02-29", 29),
@@ -110,5 +116,12 @@ sealed class Product : IProduct { // abstract class
 }
 
 fun main() {
-    println(foodDataset.map{it.price}.toString())
+//    val service = retrofit.create(ApiService::class.java)
+//
+//    CoroutineScope(Dispatchers.IO).launch {
+//        val response = service.getAllData("3")
+//
+//        Log.i("API Call:", response.toString())
+//        Log.i("Actual Data:", response.body().toString())
+//    }
 }

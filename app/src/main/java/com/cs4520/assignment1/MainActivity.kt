@@ -25,10 +25,24 @@ class MainActivity : FragmentActivity() {
 
         button.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                val response = service.getAllData("2")
 
-                Log.i("API Call:", response.toString())
-                Log.i("Actual Data:", response.body().toString())
+                val response = service.getAllData("1")
+                if (response.isSuccessful) {
+                    // need to filter the list of data
+                    // if empty, give toast error
+                    // page 5 is empty!
+                    Log.i("API Call:", response.toString())
+                    val data = response.body()
+                    if (!data.isNullOrEmpty()) {
+                            Log.i("Actual Data:", data.toString())
+                            Log.i("Sample Data:", data[0].getName().toString())
+                    } else {
+                        Log.i("API Call:", "Empty data.")
+                    }
+                } else {
+                    Log.i("API Call:", "Failed to fetch data.")
+                }
+
             }
         }
     }
