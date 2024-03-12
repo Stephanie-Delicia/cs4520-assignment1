@@ -56,6 +56,7 @@ class LoginFragment : Fragment() {
                Toast.makeText(requireActivity(), "Successful login.", Toast.LENGTH_SHORT).show()
 
                 progressBar.visibility = View.VISIBLE
+                progressBar.isIndeterminate = true
                 retrieveProductData(progressBar)
                 //navHostFragmentController.navigate(R.id.action_loginFragment_to_productListFragment)
                 //userTextView.setText("")
@@ -89,6 +90,7 @@ class LoginFragment : Fragment() {
 
             }
             progressBar.visibility = View.INVISIBLE
+            progressBar.isIndeterminate = false
         }
     }
 }
