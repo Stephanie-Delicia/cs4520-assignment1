@@ -11,15 +11,17 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
+import com.cs4520.assignment1.databinding.FragmentProductListBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 
-class RecyclerAdapter(progressBar : ProgressBar): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-    public var productList: List<Product>? = ArrayList<Product>()
-    private var progressBar = progressBar
+class RecyclerAdapter(private var progressBar: ProgressBar,
+                      private var productBinding: FragmentProductListBinding): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+    var productList: List<Product>? = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
         Log.i("In", "onCreateViewHolder")
@@ -29,9 +31,6 @@ class RecyclerAdapter(progressBar : ProgressBar): RecyclerView.Adapter<RecyclerA
 
     override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
         Log.i("In", "onBindViewHolder")
-
-        // retrieveProductData(progressBar)
-        //this.notifyDataSetChanged()
         if (productList != null) {
             holder.itemTitle.text = productList!![position].name
             val expiry = productList!![position].expiryDate
@@ -70,34 +69,45 @@ class RecyclerAdapter(progressBar : ProgressBar): RecyclerView.Adapter<RecyclerA
             itemBackground = itemView.findViewById(R.id.card_view)
         }
     }
-    public fun retrieveProductData() {
+    fun retrieveProductData() {
         progressBar.visibility = View.VISIBLE
         progressBar.isIndeterminate = true
+        val adapter = this
         val service = RetrofitClient.retrofit.create(ApiService::class.java)
         Log.i("Retrieving Data:", "retrieveProductData")
         CoroutineScope(Dispatchers.IO).launch {
-            val response = service.getAllData("2")
+            var data: List<ApiProduct>?
+            //if (data.isNullOrEmpty()) {
+            Log.i("While loop:", "")
+            val response = service.getAllData("1")
             if (response.isSuccessful) {
-
                 Log.i("API Call:", response.toString())
-                val data = response.body()
+                data = response.body()
                 val convertedData = convertApiDataToProductList(data)
                 productList = convertedData
-                // notifyDataSetChanged()
                 if (!data.isNullOrEmpty()) {
-                    Log.i("Actual Data:", data.toString())
-                    Log.i("Sample Data:", data[0].getName().toString())
+                    //Log.i("Actual Data:", data.toString())
+                    //Log.i("Sample Data:", data[0].getName().toString())
                 } else {
                     Log.i("API Call:", "Empty data.")
                 }
             } else {
                 Log.i("API Call:", "Failed to fetch data.")
             }
-
+            //}
             progressBar.visibility = View.INVISIBLE
             progressBar.isIndeterminate = false
+            withContext(Dispatchers.Main) {
+                adapter.notifyDataSetChanged()
+                if (!productList.isNullOrEmpty()) {
+                    productBinding.noProductsTextView.visibility = View.INVISIBLE
+                    productBinding.refreshButton.visibility = View.INVISIBLE
+                } else {
+                    productBinding.noProductsTextView.visibility = View.VISIBLE
+                    productBinding.refreshButton.visibility = View.VISIBLE
+                }
+            }
         }
-            Log.i("Finished data fetching:", "")
     }
 
     private fun convertApiDataToProductList(list : List<ApiProduct>?) : List<Product>? {
