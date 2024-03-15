@@ -25,7 +25,6 @@ class LoginFragment : Fragment() {
     private lateinit var loginBtn : Button
     private lateinit var userTextView : EditText
     private lateinit var passTextView : EditText
-    private lateinit var progressBar: ProgressBar
     private lateinit var navHostFragmentController : NavController
 
     private var _binding: FragmentLoginBinding? = null
@@ -49,48 +48,19 @@ class LoginFragment : Fragment() {
         loginBtn = binding.LoginButton
         userTextView = binding.editTextUsername
         passTextView = binding.editTextPassword
-        progressBar = binding.progressBar
 
         loginBtn.setOnClickListener{
             if ((userTextView.text.toString() == "admin") and (passTextView.text.toString() == "admin")) {
                Toast.makeText(requireActivity(), "Successful login.", Toast.LENGTH_SHORT).show()
-
-                progressBar.visibility = View.VISIBLE
-                progressBar.isIndeterminate = true
-                retrieveProductData(progressBar)
-                //navHostFragmentController.navigate(R.id.action_loginFragment_to_productListFragment)
-                //userTextView.setText("")
-                //passTextView.setText("")
+                Log.i("Successful login", "LoginFragment")
+                navHostFragmentController.navigate(R.id.action_loginFragment_to_productListFragment)
+                userTextView.setText("")
+                passTextView.setText("")
             } else {
                 Toast.makeText(requireActivity(), "Invalid username/password. Hint: admin", Toast.LENGTH_SHORT).show()
             }
         }
 
         return view
-    }
-
-    fun retrieveProductData(progressBar: ProgressBar) {
-        val service = RetrofitClient.retrofit.create(ApiService::class.java)
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = service.getAllData("2")
-            if (response.isSuccessful) {
-                // need to filter the list of data
-                // if empty, give toast error
-                // page 5 is empty!
-                Log.i("API Call:", response.toString())
-                val data = response.body()
-                if (!data.isNullOrEmpty()) {
-                    Log.i("Actual Data:", data.toString())
-                    Log.i("Sample Data:", data[0].getName().toString())
-                } else {
-                    Log.i("API Call:", "Empty data.")
-                }
-            } else {
-                Log.i("API Call:", "Failed to fetch data.")
-
-            }
-            progressBar.visibility = View.INVISIBLE
-            progressBar.isIndeterminate = false
-        }
     }
 }

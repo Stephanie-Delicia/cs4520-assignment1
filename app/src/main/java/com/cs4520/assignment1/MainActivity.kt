@@ -25,55 +25,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : FragmentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_layout)
-
-        val button = findViewById<Button>(R.id.api_bttn_test)
-
-        val service = retrofit.create(ApiService::class.java)
-
-        button.setOnClickListener {
-            // setContent { IndeterminateCircularIndicator()}
-            CoroutineScope(Dispatchers.IO).launch {
-                // setContent {IndeterminateCircularIndicator()}
-                // setContent { IndeterminateCircularIndicator()  }
-                val response = service.getAllData("2")
-                if (response.isSuccessful) {
-                    // need to filter the list of data
-                    // if empty, give toast error
-                    // page 5 is empty!
-                    Log.i("API Call:", response.toString())
-                    val data = response.body()
-                    if (!data.isNullOrEmpty()) {
-                            Log.i("Actual Data:", data.toString())
-                            Log.i("Sample Data:", data[0].getName().toString())
-                    } else {
-                        Log.i("API Call:", "Empty data.")
-                    }
-                } else {
-                    Log.i("API Call:", "Failed to fetch data.")
-
-                }
-            }
-        }
     }
-}
-
-@Composable
-fun IndeterminateCircularIndicator() {
-    var loading by remember {
-        mutableStateOf(true) // initialize as true to first display progress
-    }
-
-    if (loading) {
-        CircularProgressIndicator(
-            modifier = Modifier.width(64.dp),
-            color = MaterialTheme.colorScheme.secondary,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant,
-        )
-    } else {return}
-
-    loading = !loading
 }
