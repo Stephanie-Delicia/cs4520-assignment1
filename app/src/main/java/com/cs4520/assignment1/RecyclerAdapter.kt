@@ -14,6 +14,7 @@ import androidx.annotation.RequiresExtension
 import androidx.cardview.widget.CardView
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.InvalidationTracker
 import com.cs4520.assignment1.databinding.FragmentProductListBinding
 import com.cs4520.assignment1.fragments.ProductListFragment
 import kotlinx.coroutines.CoroutineScope
@@ -100,11 +101,11 @@ class RecyclerAdapter(
                 val dbProds = productListFragment.getDatabase()?.productDao()?.getAllProducts()
                 Log.i("dbProds", dbProds.toString())
                 if (dbProds != null) {
-                    Log.i("dbProds value", dbProds.value.toString())
+                    Log.i("dbProds value", dbProds.toString())
                 }
-                if (dbProds != null && dbProds.value != null) {
-                    Log.i("dbProds not null", dbProds.value.toString())
-                    productList = dbProds.value?.map { it -> if (it.type == "Equipment") {
+                if (dbProds != null && dbProds != null) {
+                    Log.i("dbProds not null", dbProds.toString())
+                    productList = dbProds.map { it -> if (it.type == "Equipment") {
                         Product.EquipmentProduct(it.name!!, it.expiryDate, it.price!!,
                             ProductType.Equipment)
                     } else {
@@ -124,14 +125,14 @@ class RecyclerAdapter(
                         Log.i("API Call:", "Empty data.")
                         val dbProds =
                             productList?.map { it -> DBProduct(
-                                1,
+                                UUID.randomUUID().toString(),
                                 it.name, it.expiryDate, it.price, it.type.toString())}
                         val database = productListFragment.getDatabase()?.productDao()
                         Log.i("Database at line 127", database.toString())
                         if (database != null) {
                             database.deleteAllProducts()
                             dbProds?.map { it -> database.insert(it) }
-                            Log.i("Database updated", database.getAllProducts().value.toString())
+                            Log.i("Database updated", database.getAllProducts().toString())
                         }
                     }
                 } else { // failed api call, so retrieve database products

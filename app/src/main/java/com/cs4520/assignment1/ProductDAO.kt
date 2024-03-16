@@ -19,5 +19,5 @@ interface ProductDAO {
     fun deleteAllProducts()
 
     @Query("select * from product_table order by id desc")
-    fun getAllProducts(): LiveData<List<DBProduct>>
+    fun getAllProducts(): List<DBProduct>
 }

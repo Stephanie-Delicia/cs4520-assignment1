@@ -11,7 +11,7 @@ import org.json.JSONObject
 
 // Class for product database
 
-@Database(entities = [DBProduct::class], version = 1)
+@Database(entities = [DBProduct::class], version = 3)
 
 abstract class  ProductDB : RoomDatabase() {
     abstract fun productDao(): ProductDAO
@@ -24,7 +24,7 @@ abstract class  ProductDB : RoomDatabase() {
             if (instance == null)
                 instance = Room.databaseBuilder(
                     ctx.applicationContext, ProductDB::class.java,
-                    "product_database"
+                    "product_table"
                 )
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)

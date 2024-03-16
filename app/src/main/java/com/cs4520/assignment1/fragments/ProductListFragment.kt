@@ -46,7 +46,7 @@ class ProductListFragment : Fragment() {
                 it,
                 ProductDB::class.java,
                 "product_table"
-            ).build()
+            ).fallbackToDestructiveMigration().build()
         }
 
         // Inflate the layout for this fragment
