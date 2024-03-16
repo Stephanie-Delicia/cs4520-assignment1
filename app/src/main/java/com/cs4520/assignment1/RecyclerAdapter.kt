@@ -105,12 +105,15 @@ class RecyclerAdapter(
                     data = response.body()
                     val convertedData = convertApiDataToProductList(data)
                     productList = convertedData
+                    var counter = 0
                     if (!data.isNullOrEmpty()) { // data is NOT null or empty
                         val dbProds =
                             productList?.map {
+                                counter += 1
                                 DBProduct(
-                                UUID.randomUUID().toString(),
-                                it.name, it.expiryDate, it.price, it.type.toString())}
+                                    counter.toString(),
+                                it.name, it.expiryDate, it.price, it.type.toString())
+                            }
                         val database = productListFragment.getDatabase()?.productDao()
                         if (database != null) {
                             database.deleteAllProducts()
