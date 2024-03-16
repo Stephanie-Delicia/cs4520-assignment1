@@ -1,11 +1,5 @@
 package com.cs4520.assignment1
 
-import android.util.Log
-import com.cs4520.assignment1.RetrofitClient.retrofit
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
 val productsDataset = listOf(
     listOf("Treadmill", "Equipment", null, 32),
     listOf("Banana", "Food", "2024-02-29", 29),
@@ -45,18 +39,8 @@ val productsDataset = listOf(
     listOf("Blackberry", "Food", "2024-05-08", 29),
 )
 
-val entireDatasetConverted : List<Product> = productsDataset.map{ if (it[1] == "Food") {
-    Product.FoodProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.FOOD)
-} else {
-    Product.EquipmentProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.EQUIPMENT)
-} }
-
-val foodDataset: List<Product.FoodProduct>
-= productsDataset.filter{it[1] == "Food"}.toSet().map{
-    Product.FoodProduct(it[0].toString(), it[2]?.toString(), it[3] as Int, ProductType.FOOD)}
-
 enum class ProductType {
-    EQUIPMENT, FOOD
+    Equipment, Food
 }
 interface IProduct {            // Interface for a ticket
     val name: String // all tickets should have a price
@@ -113,15 +97,4 @@ sealed class Product : IProduct { // abstract class
             return info
         }
     }
-}
-
-fun main() {
-//    val service = retrofit.create(ApiService::class.java)
-//
-//    CoroutineScope(Dispatchers.IO).launch {
-//        val response = service.getAllData("3")
-//
-//        Log.i("API Call:", response.toString())
-//        Log.i("Actual Data:", response.body().toString())
-//    }
 }
