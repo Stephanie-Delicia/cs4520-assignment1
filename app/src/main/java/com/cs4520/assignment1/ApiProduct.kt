@@ -10,31 +10,15 @@ class ApiProduct {
         return name
     }
 
-    fun setName(newName : String) {
-        name = newName
-    }
-
     fun getType() : String? {
         return type
-    }
-
-    fun setType(newType : String) {
-        type = newType
     }
 
     fun getExpiryDate() : String? {
         return expiryDate
     }
 
-    fun setExpiryDate(newExp : String) {
-        expiryDate = newExp
-    }
-
     fun getPrice() : Double? {
         return price
-    }
-
-    fun setPrice(newPrice : Double) {
-        price = newPrice
     }
 }

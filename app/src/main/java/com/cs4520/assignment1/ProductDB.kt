@@ -4,15 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.json.JSONObject
+
 
 // Class for product database
-
 @Database(entities = [DBProduct::class], version = 3)
-
 abstract class  ProductDB : RoomDatabase() {
     abstract fun productDao(): ProductDAO
 

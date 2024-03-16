@@ -1,35 +1,25 @@
-## CS4520 Assignment 1: Amazing Products
+## CS4520 Assignment 4: API Adventures
 
 Link to GitHub repository: https://github.com/Stephanie-Delicia/cs4520-assignment1
 
 ### To use:
 
-I was able to run the app on my end and included a video (assignment1_demo.mov) of how the app functions. 
+I was able to run the app on my end and included a video (assignment4_video.mov) of how the app functions. 
 So, I believe downloading the code and running it should work with Android 14.
 
-The LoginFragment, ProductListFragment, and navigation should function as per assignment requirements. 
+Overall, I believe I implemented the required functionality for the most part. The only exception
+is when the product list is saved into the database and displayed to the user again in airplane mode.
+The products are not displayed in the original order. This should be a quick fix, since this is
+due to the database returning data in the order of object ids, so I should use a different id scheme. 
 
 ### Added files
 
-#### 1. MainActivity
+#### 1. APIProduct & APIService
 
-#### 2. Fragments
+These files contain the logic for how API information is fetched.
 
-In folder, fragments, two new fragments were added: LoginFragment and ProductListFragment.
+#### 2. ProductDAO, ProductDB
 
-LoginFragment has two text fields and a button. ProductListFragment just displays a list of products.
-
-#### 3. RecyclerAdapter
-
-An adapter for displaying products in a list in the ProductListFragment. Obtains data from Dataset.kt from the original repo.
-
-Dataset.kt contains the seal classes for different product types.
-
-#### 4. Layout
-
-This folder contains the layouts for the new fragments, main activity, and the card layout for the product list.
-
-
-#### 5. Navigation
-
-Finally, there is an xml called nav_graph in the navigation folder for naviagting from the login to the product list. 
+ProductDB is the database containing product information whereas
+ProductDAO describes what methods can be applied to the database,
+for retrieving info, deleting data, etc.

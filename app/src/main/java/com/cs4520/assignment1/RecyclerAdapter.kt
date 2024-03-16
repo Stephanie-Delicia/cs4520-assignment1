@@ -1,7 +1,6 @@
 package com.cs4520.assignment1
 
 import android.graphics.Color
-import android.net.http.NetworkException
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import androidx.annotation.RequiresExtension
 import androidx.cardview.widget.CardView
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.InvalidationTracker
 import com.cs4520.assignment1.databinding.FragmentProductListBinding
 import com.cs4520.assignment1.fragments.ProductListFragment
 import kotlinx.coroutines.CoroutineScope
@@ -35,13 +33,11 @@ class RecyclerAdapter(
     var productList: List<Product>? = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
-        Log.i("In", "onCreateViewHolder")
         val v = LayoutInflater.from(parent.context).inflate(R.layout.card_layout, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
-        Log.i("In", "onBindViewHolder")
         if (productList != null) {
             holder.itemTitle.text = productList!![position].name
             val expiry = productList!![position].expiryDate
@@ -86,26 +82,16 @@ class RecyclerAdapter(
         progressBar.isIndeterminate = true
         val adapter = this
         val service = RetrofitClient.retrofit.create(ApiService::class.java)
-        Log.i("Retrieving Data:", "retrieveProductData")
         CoroutineScope(Dispatchers.IO).launch {
             var data: List<ApiProduct>?
-            //if (data.isNullOrEmpty()) {
             var response: Response<List<ApiProduct>>? = null
-            Log.i("While loop:", "")
             try {
-                Log.i("Line 93", "")
                 response = service.getAllData("1")
-                Log.i("Line 95", "")
             }  catch(e: IOException) { // no internet connection
-                Log.i("WELP", "")
                 val dbProds = productListFragment.getDatabase()?.productDao()?.getAllProducts()
-                Log.i("dbProds", dbProds.toString())
                 if (dbProds != null) {
-                    Log.i("dbProds value", dbProds.toString())
-                }
-                if (dbProds != null && dbProds != null) {
-                    Log.i("dbProds not null", dbProds.toString())
-                    productList = dbProds.map { it -> if (it.type == "Equipment") {
+                    productList = dbProds.map {
+                        if (it.type == "Equipment") {
                         Product.EquipmentProduct(it.name!!, it.expiryDate, it.price!!,
                             ProductType.Equipment)
                     } else {
@@ -114,28 +100,25 @@ class RecyclerAdapter(
                     }}
                 }
             }
-            Log.i("Line 98, I get here", "")
             if (response != null) {
                 if (response.isSuccessful) {
-                    Log.i("API Call:", response.toString())
                     data = response.body()
                     val convertedData = convertApiDataToProductList(data)
                     productList = convertedData
                     if (!data.isNullOrEmpty()) { // data is NOT null or empty
-                        Log.i("API Call:", "Empty data.")
                         val dbProds =
-                            productList?.map { it -> DBProduct(
+                            productList?.map {
+                                DBProduct(
                                 UUID.randomUUID().toString(),
                                 it.name, it.expiryDate, it.price, it.type.toString())}
                         val database = productListFragment.getDatabase()?.productDao()
-                        Log.i("Database at line 127", database.toString())
                         if (database != null) {
                             database.deleteAllProducts()
-                            dbProds?.map { it -> database.insert(it) }
-                            Log.i("Database updated", database.getAllProducts().toString())
+                            dbProds?.map { database.insert(it) }
+                            //Log.i("Database updated", database.getAllProducts().toString())
                         }
                     }
-                } else { // failed api call, so retrieve database products
+                } else { // failed api call
                     Log.i("Failed API Call:", "")
                 }
             }

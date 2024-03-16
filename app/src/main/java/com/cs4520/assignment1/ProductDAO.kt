@@ -1,9 +1,7 @@
 package com.cs4520.assignment1
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.room.*
 
+import androidx.room.*
 @Dao
 interface ProductDAO {
     @Insert
