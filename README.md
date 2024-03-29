@@ -1,4 +1,4 @@
-## CS4520 Assignment 4: API Adventures
+## CS4520 Assignment 5: Crafting with compose
 
 Link to GitHub repository: https://github.com/Stephanie-Delicia/cs4520-assignment1
 
