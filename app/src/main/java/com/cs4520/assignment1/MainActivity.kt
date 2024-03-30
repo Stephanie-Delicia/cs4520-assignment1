@@ -8,8 +8,11 @@ import android.widget.ProgressBar
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -137,12 +140,23 @@ class MainActivity : FragmentActivity() {
         }
     }
 
+    @Composable
+    fun ProductItem(data: Product, modifier: Modifier = Modifier) {
+        Row(modifier.fillMaxWidth()) {
+            Text(text = data.name)
+            // … other composables required for displaying `data`
+        }
+    }
+
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     @Composable
     @Preview
     fun ProductListScreen() {
         var products: MutableState<List<Product>?> = remember { mutableStateOf(productList) }
         var initialLoading by remember {mutableStateOf(false)} //replace initial loading
+        var value = remember {0}
+        fun getNextInt(): Int = value++
+
         // var refreshButton = null
         database = this.let {
             Room.databaseBuilder(
@@ -165,6 +179,19 @@ class MainActivity : FragmentActivity() {
         ) {
             Text("Refresh")
         }
+
+        LazyColumn(Modifier.fillMaxSize()) {
+            items(
+                count = products.value!!.size,
+                key = {
+                    getNextInt()
+                },
+                itemContent = { index ->
+                    ProductItem(products.value!![index])
+                }
+            )
+        }
+
 
         //CircularProgressIndicator(
         //    modifier = Modifier.width(64.dp),
