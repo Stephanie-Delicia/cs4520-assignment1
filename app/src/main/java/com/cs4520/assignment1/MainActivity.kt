@@ -7,14 +7,23 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresExtension
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,15 +36,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.NavHost
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Database
 import androidx.room.Room
@@ -55,19 +69,26 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_layout)
         setContent {
-            ProductListScreen()
-            //WelcomeScreen()
+            ScreenNavigation()
+        }
+    }
 
-            // ProductListScreen()
-//            val navController = rememberNavController()
-//            NavHost(navController, startDestination = "welcome") {
-//
-//            }
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    @Composable
+    fun ScreenNavigation() {
+        val navController = rememberNavController()
+        NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
+            composable(route = Screen.LoginScreen.route) {
+                LoginScreen(navController = navController)
+            }
+            composable( route = Screen.ProductListScreen.route) {
+                ProductListScreen()
+            }
         }
     }
 
     @Composable
-    fun WelcomeScreen() {
+    fun LoginScreen(navController: NavController) {
         Box(
             contentAlignment = Alignment.Center, // you apply alignment to all children
             modifier = Modifier.fillMaxSize()
@@ -97,7 +118,7 @@ class MainActivity : FragmentActivity() {
                 })
 
             Button(
-                onClick = { /* Do something */ },
+                onClick = {navController.navigate(Screen.ProductListScreen.route)},
                 colors = ButtonDefaults.buttonColors(Color(0xFF4D8EFF)),
                 // Assign reference "button" to the Button composable
                 // and constrain it to the top of the ConstraintLayout
@@ -141,11 +162,46 @@ class MainActivity : FragmentActivity() {
     }
 
     @Composable
+    private fun ProductImage(prod: Product) {
+        Image(
+            painter = painterResource(id = prod.imageForDisplay()),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(8.dp)
+                .size(84.dp)
+                .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+        )
+    }
+
+    @Composable
     fun ProductItem(data: Product, modifier: Modifier = Modifier) {
-        Row(modifier.fillMaxWidth()) {
-            Text(text = data.name)
-            // … other composables required for displaying `data`
+        Card(
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            //elevation = 2.sp,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
+            // backgroundColor = Color.White,
+            shape = RoundedCornerShape(corner = CornerSize(16.dp))
+
+        ) {
+            Row {
+                ProductImage(data)
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.CenterVertically)) {
+                    Text(text = data.name, style = typography.h6)
+                    Text(text = "VIEW DETAIL", style = typography.caption)
+
+                }
+            }
         }
+
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
@@ -311,5 +367,19 @@ class MainActivity : FragmentActivity() {
             }
         }
         return returnList
+    }
+}
+
+sealed class Screen(val route:String){
+    data object LoginScreen : Screen(route = "login_screen")
+    data object ProductListScreen : Screen(route = "productList_screen")
+
+    fun withArgs(vararg args:String) : String {
+        return buildString {
+            append(route)
+            args.forEach { arg ->
+                append("/$arg")
+            }
+        }
     }
 }
