@@ -225,10 +225,10 @@ class MainActivity : FragmentActivity() {
         }
 
         Box(contentAlignment = Alignment.Center, // you apply alignment to all children
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
         ConstraintLayout {
-            val (refreshText, refreshButton) = createRefs()
+            val (refreshText, refreshButton, loadingCircle) = createRefs()
             val startGuideline = createGuidelineFromStart(0.2f)
             val endGuideline = createGuidelineFromEnd(0.2f)
 
@@ -236,43 +236,11 @@ class MainActivity : FragmentActivity() {
                 Text("Unable to fetch any products. Refresh?",
                     modifier =
                     Modifier.constrainAs(refreshText) {
-                        top.linkTo(parent.top, margin = 32.dp)
+                        top.linkTo(parent.top, margin = 400.dp)
                         start.linkTo(startGuideline)
                         end.linkTo(endGuideline)
                     },
                     fontSize = 20.sp)
-            } else {
-                Spacer(modifier = Modifier.height(1.dp))
-            }
-
-            if (isTextVisible.value) {
-                Button(
-                    modifier = Modifier.constrainAs(refreshButton) {
-                        top.linkTo(refreshText.bottom, margin = 390.dp)
-                        start.linkTo(startGuideline)
-                        end.linkTo(endGuideline)
-                    },
-                    onClick = {
-                        retrieveProductData(products, isLoading, isTextVisible)
-                        Log.i("refreshButton data:", products.value.toString())
-                        Log.i("refreshButton data length:", products.value?.size.toString())
-                    },
-                    colors = ButtonDefaults.buttonColors(Color(0xFF4D8EFF)),
-                ) {
-                    Text("Refresh")
-                }
-            } else {
-                Spacer(modifier = Modifier.height(1.dp))
-            }
-        }
-
-            if (isLoading.value) {
-                Log.i("isLoading.value", "line 274")
-                CircularProgressIndicator(
-                    modifier = Modifier.width(64.dp).alpha(1f),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
             } else {
                 Spacer(modifier = Modifier.height(1.dp))
             }
@@ -293,7 +261,46 @@ class MainActivity : FragmentActivity() {
                     )
                 }
             }
+
+            if (isTextVisible.value) {
+                Button(
+                    modifier = Modifier.constrainAs(refreshButton) {
+                        top.linkTo(refreshText.bottom, margin = 32.dp)
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                    },
+                    onClick = {
+                        isTextVisible.value = false
+                        retrieveProductData(products, isLoading, isTextVisible)
+                        Log.i("refreshButton data:", products.value.toString())
+                        Log.i("refreshButton data length:", products.value?.size.toString())
+                    },
+                    colors = ButtonDefaults.buttonColors(Color(0xFF4D8EFF)),
+                ) {
+                    Text("Refresh")
+                }
+            } else {
+                Spacer(modifier = Modifier.height(1.dp))
+            }
+
+            if (isLoading.value) {
+                Log.i("isLoading.value", "line 274")
+                CircularProgressIndicator(
+                    modifier = Modifier.constrainAs(loadingCircle) {
+                        bottom.linkTo(refreshText.top, margin = 32.dp)
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                    }
+                    ,
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            } else {
+                Spacer(modifier = Modifier.height(1.dp))
+            }
         }
+        }
+
 
        if (!initialLoading) {
            Log.i("initialLoading", "line 299")
