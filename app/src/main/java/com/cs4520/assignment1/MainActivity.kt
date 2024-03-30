@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -224,6 +222,12 @@ class MainActivity : FragmentActivity() {
             ).fallbackToDestructiveMigration().build()
         }
 
+        if (!initialLoading) {
+            Log.i("initialLoading", "line 299")
+            retrieveProductData(products, isLoading, isTextVisible)
+            initialLoading = true
+        }
+
         Box(contentAlignment = Alignment.Center, // you apply alignment to all children
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -301,12 +305,6 @@ class MainActivity : FragmentActivity() {
         }
         }
 
-
-       if (!initialLoading) {
-           Log.i("initialLoading", "line 299")
-            retrieveProductData(products, isLoading, isTextVisible)
-            initialLoading = true
-        }
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
