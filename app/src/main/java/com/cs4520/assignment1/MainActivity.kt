@@ -3,16 +3,16 @@ package com.cs4520.assignment1
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -51,19 +52,19 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Database
 import androidx.room.Room
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Response
 import java.io.IOException
 import kotlin.math.roundToInt
 
 class MainActivity : FragmentActivity() {
-    var productList: List<Product>? = ArrayList()
+    private var productList: List<Product>? = ArrayList()
     private var database: ProductDB? = null
+    private var isLoading: Boolean = false
+    private var isTextVisible: Boolean = false
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +77,7 @@ class MainActivity : FragmentActivity() {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     @Composable
     fun ScreenNavigation() {
+        // This function allows for navigation between the login screen and the product list screen
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
             composable(route = Screen.LoginScreen.route) {
@@ -89,6 +91,7 @@ class MainActivity : FragmentActivity() {
 
     @Composable
     fun LoginScreen(navController: NavController) {
+        // Contains fields for username, password, and a login button
         Box(
             contentAlignment = Alignment.Center, // you apply alignment to all children
             modifier = Modifier.fillMaxSize()
@@ -98,9 +101,7 @@ class MainActivity : FragmentActivity() {
             var userFieldText by remember { mutableStateOf("") }
             var passFieldText by remember { mutableStateOf("") }
             val title by remember { mutableStateOf("Assignment 5: Crafting with compose") }
-            // Create guideline from the start of the parent at 10% the width of the Composable
             val startGuideline = createGuidelineFromStart(0.2f)
-            // Create guideline from the end of the parent at 10% the width of the Composable
             val endGuideline = createGuidelineFromEnd(0.2f)
             val gradientColors = listOf(Color(0xFFD900FF), Color(0xFF4D8EFF))
 
@@ -201,7 +202,6 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
-
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
@@ -210,10 +210,12 @@ class MainActivity : FragmentActivity() {
     fun ProductListScreen() {
         var products: MutableState<List<Product>?> = remember { mutableStateOf(productList) }
         var initialLoading by remember {mutableStateOf(false)} //replace initial loading
+        var isLoading : MutableState<Boolean> = remember { mutableStateOf(isLoading) }
+        var isTextVisible : MutableState<Boolean> = remember { mutableStateOf(isTextVisible) }
+
         var value = remember {0}
         fun getNextInt(): Int = value++
 
-        // var refreshButton = null
         database = this.let {
             Room.databaseBuilder(
                 it,
@@ -222,51 +224,90 @@ class MainActivity : FragmentActivity() {
             ).fallbackToDestructiveMigration().build()
         }
 
-        Button(
-            onClick = {
-                retrieveProductData(products)
-                // noProductsText!!.visibility = View.INVISIBLE
-                Log.i("refreshButton data:", products.value.toString())
-                Log.i("refreshButton data length:", products.value?.size.toString())
-            },
-            colors = ButtonDefaults.buttonColors(Color(0xFF4D8EFF)),
-            // Assign reference "button" to the Button composable
-            // and constrain it to the top of the ConstraintLayout
+        Box(contentAlignment = Alignment.Center, // you apply alignment to all children
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text("Refresh")
-        }
+        ConstraintLayout {
+            val (refreshText, refreshButton) = createRefs()
+            val startGuideline = createGuidelineFromStart(0.2f)
+            val endGuideline = createGuidelineFromEnd(0.2f)
 
-        LazyColumn(Modifier.fillMaxSize()) {
-            items(
-                count = products.value!!.size,
-                key = {
-                    getNextInt()
-                },
-                itemContent = { index ->
-                    ProductItem(products.value!![index])
+            if (isTextVisible.value) {
+                Text("Unable to fetch any products. Refresh?",
+                    modifier =
+                    Modifier.constrainAs(refreshText) {
+                        top.linkTo(parent.top, margin = 32.dp)
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                    },
+                    fontSize = 20.sp)
+            } else {
+                Spacer(modifier = Modifier.height(1.dp))
+            }
+
+            if (isTextVisible.value) {
+                Button(
+                    modifier = Modifier.constrainAs(refreshButton) {
+                        top.linkTo(refreshText.bottom, margin = 390.dp)
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                    },
+                    onClick = {
+                        retrieveProductData(products, isLoading, isTextVisible)
+                        Log.i("refreshButton data:", products.value.toString())
+                        Log.i("refreshButton data length:", products.value?.size.toString())
+                    },
+                    colors = ButtonDefaults.buttonColors(Color(0xFF4D8EFF)),
+                ) {
+                    Text("Refresh")
                 }
-            )
+            } else {
+                Spacer(modifier = Modifier.height(1.dp))
+            }
         }
 
+            if (isLoading.value) {
+                Log.i("isLoading.value", "line 274")
+                CircularProgressIndicator(
+                    modifier = Modifier.width(64.dp).alpha(1f),
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            } else {
+                Spacer(modifier = Modifier.height(1.dp))
+            }
 
-        //CircularProgressIndicator(
-        //    modifier = Modifier.width(64.dp),
-        //    color = MaterialTheme.colorScheme.secondary,
-        //    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-        //)
+            if (isLoading.value) {
+                //Spacer(modifier = Modifier.height(1.dp))
+            } else {
+                LazyColumn(Modifier.fillMaxSize()) {
+                    // fillMaxSize()
+                    items(
+                        count = products.value!!.size,
+                        key = {
+                            getNextInt()
+                        },
+                        itemContent = { index ->
+                            ProductItem(products.value!![index])
+                        }
+                    )
+                }
+            }
+        }
 
        if (!initialLoading) {
-            retrieveProductData(products)
+           Log.i("initialLoading", "line 299")
+            retrieveProductData(products, isLoading, isTextVisible)
             initialLoading = true
         }
-
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    fun retrieveProductData(productList : MutableState<List<Product>?>) {
-        //progressBar.visibility = View.VISIBLE
-        //progressBar.isIndeterminate = true
-       // val adapter = this
+    fun retrieveProductData(productList : MutableState<List<Product>?>,
+                            isLoadVisible : MutableState<Boolean>,
+                            isRefreshTextVisible : MutableState<Boolean>) {
+        isLoadVisible.value = true
+        isLoading = true
         val service = RetrofitClient.retrofit.create(ApiService::class.java)
         CoroutineScope(Dispatchers.IO).launch {
             var data: List<ApiProduct>?
@@ -317,6 +358,12 @@ class MainActivity : FragmentActivity() {
                 }
             }
 
+            isLoadVisible.value = false
+            isLoading = false
+            isRefreshTextVisible.value = productList.value.isNullOrEmpty()
+            isTextVisible = isRefreshTextVisible.value
+            Log.i("Failed line 359, isTextVisible:", isRefreshTextVisible.value.toString())
+            Log.i("Failed line 360, productList.value.isNullOrEmpty():", productList.value.isNullOrEmpty().toString())
             //progressBar.visibility = View.INVISIBLE
             //progressBar.isIndeterminate = false
 //            withContext(Dispatchers.Main) {
@@ -373,13 +420,4 @@ class MainActivity : FragmentActivity() {
 sealed class Screen(val route:String){
     data object LoginScreen : Screen(route = "login_screen")
     data object ProductListScreen : Screen(route = "productList_screen")
-
-    fun withArgs(vararg args:String) : String {
-        return buildString {
-            append(route)
-            args.forEach { arg ->
-                append("/$arg")
-            }
-        }
-    }
 }
