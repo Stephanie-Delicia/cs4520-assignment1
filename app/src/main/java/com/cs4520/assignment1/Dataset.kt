@@ -20,7 +20,7 @@ sealed class Product : IProduct { // abstract class
     ) : Product() {
 
         override fun backgroundColor(): String {
-            return "#FFD965"
+            return "#DFE6FF"
         }
         override fun imageForDisplay(): Int {
             return R.drawable.food
@@ -42,7 +42,7 @@ sealed class Product : IProduct { // abstract class
         override val type: ProductType
     ) : Product() {
         override fun backgroundColor(): String {
-            return "#E06666"
+            return "#9EB4FF"
         }
         override fun imageForDisplay(): Int {
             return R.drawable.equipment

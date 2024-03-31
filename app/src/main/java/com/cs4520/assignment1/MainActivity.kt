@@ -3,6 +3,8 @@ package com.cs4520.assignment1
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.graphics.Color as graphicsColor
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
@@ -45,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -66,7 +69,6 @@ class MainActivity : FragmentActivity() {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_layout)
         setContent {
             ScreenNavigation()
         }
@@ -117,7 +119,17 @@ class MainActivity : FragmentActivity() {
                 })
 
             Button(
-                onClick = {navController.navigate(Screen.ProductListScreen.route)},
+                onClick = {
+                    if ((userFieldText.toString() == "admin") and
+                        (passFieldText.toString() == "admin")) {
+                       Toast.makeText(this@MainActivity, "Successful login.", Toast.LENGTH_SHORT).show()
+                        Log.i("Successful login", "LoginFragment")
+                        navController.navigate(Screen.ProductListScreen.route)
+                        userFieldText = ""
+                        passFieldText = ""
+            } else {
+                Toast.makeText(this@MainActivity, "Invalid username/password. Hint: admin", Toast.LENGTH_SHORT).show()
+            }},
                 colors = ButtonDefaults.buttonColors(Color(0xFF4D8EFF)),
                 // Assign reference "button" to the Button composable
                 // and constrain it to the top of the ConstraintLayout
@@ -181,7 +193,7 @@ class MainActivity : FragmentActivity() {
                 .fillMaxWidth(),
             //elevation = 2.sp,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                containerColor = Color(data.backgroundColor().toColorInt())
             ),
             // backgroundColor = Color.White,
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
@@ -189,22 +201,33 @@ class MainActivity : FragmentActivity() {
         ) {
             Row {
                 ProductImage(data)
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                        .align(Alignment.CenterVertically)) {
-                    Text(text = data.name, style = typography.h6)
-                    Text(text = "VIEW DETAIL", style = typography.caption)
-
+                if (data.type == ProductType.Equipment) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                            .align(Alignment.CenterVertically)) {
+                        Text(text = data.name, style = typography.h6)
+                        Text(text = "$" + data.price.toString(), style = typography.caption)
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                            .align(Alignment.CenterVertically)) {
+                        Text(text = data.name, style = typography.h6)
+                        Text(text = "Expiry: " + data.expiryDate, style = typography.caption)
+                        Text(text = "$" + data.price.toString(), style = typography.caption)
+                    }
                 }
+
             }
         }
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     @Composable
-    @Preview
     fun ProductListScreen() {
         var products: MutableState<List<Product>?> = remember { mutableStateOf(productList) }
         var initialLoading by remember {mutableStateOf(false)} //replace initial loading
@@ -369,18 +392,6 @@ class MainActivity : FragmentActivity() {
             isTextVisible = isRefreshTextVisible.value
             Log.i("Failed line 359, isTextVisible:", isRefreshTextVisible.value.toString())
             Log.i("Failed line 360, productList.value.isNullOrEmpty():", productList.value.isNullOrEmpty().toString())
-            //progressBar.visibility = View.INVISIBLE
-            //progressBar.isIndeterminate = false
-//            withContext(Dispatchers.Main) {
-//                adapter.notifyDataSetChanged()
-//                if (!productList.isNullOrEmpty()) {
-//                    productBinding.noProductsTextView.visibility = View.INVISIBLE
-//                    productBinding.refreshButton.visibility = View.INVISIBLE
-//                } else {
-//                    productBinding.noProductsTextView.visibility = View.VISIBLE
-//                    productBinding.refreshButton.visibility = View.VISIBLE
-//                }
-//            }
         }
     }
 
