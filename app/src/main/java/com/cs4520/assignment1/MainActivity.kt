@@ -341,7 +341,7 @@ class MainActivity : FragmentActivity() {
             var data: List<ApiProduct>?
             var response: Response<List<ApiProduct>>? = null
             try {
-                response = service.getAllData("1")
+                response = service.getAllData("3")
             }  catch(e: IOException) { // no internet connection
                 Log.i("no internet connection", "")
                 val dbProds = database?.productDao()?.getAllProducts()
