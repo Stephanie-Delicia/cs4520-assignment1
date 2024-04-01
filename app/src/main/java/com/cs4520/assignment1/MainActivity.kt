@@ -3,9 +3,9 @@ package com.cs4520.assignment1
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.graphics.Color as graphicsColor
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -43,7 +43,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -54,11 +53,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
+import java.time.Duration
 import kotlin.math.roundToInt
 
 class MainActivity : FragmentActivity() {
@@ -66,9 +73,39 @@ class MainActivity : FragmentActivity() {
     private var database: ProductDB? = null
     private var isLoading: Boolean = false
     private var isTextVisible: Boolean = false
+    @RequiresApi(Build.VERSION_CODES.O)
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        database = this.let {
+            Room.databaseBuilder(
+                it,
+                ProductDB::class.java,
+                "product_table"
+            ).fallbackToDestructiveMigration().build()
+        }
+
+        // database.
+
+        ////////////////// Setup for work manager
+
+        // constraints
+//        val constraints = Constraints.Builder ()
+//            .setRequiresCharging (false)
+//            .setRequiredNetworkType (NetworkType.CONNECTED)
+//            .build()
+//
+//        // create Periodic time request
+//        val myWorkRequest: WorkRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(repeatInterval=
+//        Duration.ofHours(1))
+//            .setConstraints(constraints)
+//            .build()
+//
+//        // execute request
+//        WorkManager.getInstance(this).enqueue(myWorkRequest)
+
+        //////////////// Setup for composables/screens
         setContent {
             ScreenNavigation()
         }
@@ -201,13 +238,14 @@ class MainActivity : FragmentActivity() {
         ) {
             Row {
                 ProductImage(data)
+                val invalid_char = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_')
                 if (data.type == ProductType.Equipment) {
                     Column(
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxWidth()
                             .align(Alignment.CenterVertically)) {
-                        Text(text = data.name, style = typography.h6)
+                        Text(text = data.name.filter {!invalid_char.contains(it)}, style = typography.h6)
                         Text(text = "$" + data.price.toString(), style = typography.caption)
                     }
                 } else {
@@ -216,7 +254,7 @@ class MainActivity : FragmentActivity() {
                             .padding(16.dp)
                             .fillMaxWidth()
                             .align(Alignment.CenterVertically)) {
-                        Text(text = data.name, style = typography.h6)
+                        Text(text = data.name.filter {!invalid_char.contains(it)}, style = typography.h6)
                         Text(text = "Expiry: " + data.expiryDate, style = typography.caption)
                         Text(text = "$" + data.price.toString(), style = typography.caption)
                     }
@@ -237,13 +275,6 @@ class MainActivity : FragmentActivity() {
         var value = remember {0}
         fun getNextInt(): Int = value++
 
-        database = this.let {
-            Room.databaseBuilder(
-                it,
-                ProductDB::class.java,
-                "product_table"
-            ).fallbackToDestructiveMigration().build()
-        }
 
         if (!initialLoading) {
             Log.i("initialLoading", "line 299")
@@ -433,7 +464,7 @@ class MainActivity : FragmentActivity() {
     }
 }
 
-sealed class Screen(val route:String){
+sealed class Screen(val route : String){
     data object LoginScreen : Screen(route = "login_screen")
     data object ProductListScreen : Screen(route = "productList_screen")
 }
