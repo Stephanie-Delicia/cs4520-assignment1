@@ -1,4 +1,4 @@
-//package com.cs4520.assignment1
+package com.cs4520.assignment1//package com.cs4520.assignment1
 //
 //import android.content.Context
 //import android.util.Log
